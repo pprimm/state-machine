@@ -29,14 +29,16 @@ export function createMachine(graph, state, opts) {
       const nodeOut = /** @type {EdgeOut | null} */ (graph[state]);
       nodeOut &&
         nodeOut[LEAVE] &&
-        nodeOut[LEAVE](machine, [nextState], { type: LEAVE });
+        nodeOut[LEAVE](machine, [nextState], event);
+      
+      const leavingState = state;
+      state = nextState;
 
-      const nodeIn = /** @type {EdgeIn | null} */ (graph[nextState]);
+      const nodeIn = /** @type {EdgeIn | null} */ (graph[state]);
       nodeIn &&
         nodeIn[ENTER] &&
-        nodeIn[ENTER](machine, [nextState], { type: ENTER });
+        nodeIn[ENTER](machine, [leavingState], event);
 
-      state = nextState;
     },
   };
 
